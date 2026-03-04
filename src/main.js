@@ -513,13 +513,18 @@ let instructionsVerification = {
   stimulus: `
   <div class="instrucciones">
     <p>Ahora realizarás la siguiente tarea:</p>
-    <p>A continuación verás una serie de <strong>palabras</strong> en la pantalla que se mostrarán una a una.</p>
-    <p>Algunas de estas palabras han podido aparecer en los textos que leíste anteriormente y otras serán nuevas.</p>
-    <p>Tu tarea consiste en indicar si cada palabra estuvo <strong>PRESENTE</strong> o <strong>NO PRESENTE</strong> en cualquiera de los dos textos.</p>
+    <p>A continuación verás una serie de <strong>oraciones</strong> en la pantalla que se mostrarán una a una.</p>
+    <p>Algunas de estas oraciones serán <strong>correctas</strong> y otras serán <strong>incorrectas</strong> en relación con la información que acabas de leer en los textos.</p>
+    <p>Tu tarea consiste en indicar si cada oración es <strong>VERDADERA</strong> o <strong>FALSA</strong> según lo que aparecía en los textos.</p>
+
+    <p>Por ejemplo:</p>
+    <p><em>"El gato estaba encima de la mesa."</em></p>
+    <p>Si esa información aparecía en los textos, deberás indicar que es <strong>verdadera</strong>. Si no aparecía o contradice lo que leíste, deberás indicar que es <strong>falsa</strong>.</p>
 
     <p>Para responder harás lo siguiente:</p>
-    <p><strong>Si has visto<strong> antes el objeto, pulsa la tecla '${correctKey.toUpperCase()}' (presente).</p>
-    <p><strong>Si no has visto<strong> antes el objeto, pulsa la tecla '${incorrectKey.toUpperCase()}' (no presente).</p>
+    <p><strong>Si la oración es correcta</strong>, pulsa la tecla '${correctKey.toUpperCase()}' (SÍ).</p>
+    <p><strong>Si la oración es incorrecta</strong>, pulsa la tecla '${incorrectKey.toUpperCase()}' (NO).</p>
+
     <p>Te recomendamos colocar los dedos sobre las teclas ${correctKey.toUpperCase()} y ${incorrectKey.toUpperCase()} durante la tarea para no olvidarlas.</p>
     <p>Pulsa la barra espaciadora para comenzar.</p>
   </div>
@@ -535,8 +540,8 @@ let verificationStimuli = verificationSentences.map((verificationSentece) => {
     stimulus: `
       <h3 class="sentence">${verificationSentece.text}</h3>
       <div class="keys">
-        <p class="${correctKey === 'a' ? 'left' : 'right'}">PRESENTE</p>
-        <p class="${correctKey === 'a' ? 'right' : 'left'}">NO PRESENTE</p>
+        <p class="${correctKey === 'a' ? 'left' : 'right'}">SÍ</p>
+        <p class="${correctKey === 'a' ? 'right' : 'left'}">NO</p>
       </div>
     `,
     correct_response: verificationSentece.correctResponse
@@ -557,7 +562,7 @@ let testVerification = {
       data.response,
       data.correct_response
     );
-    data.correct_response_meaning = correctKey === data.correct_response ? "PRESENTE" : "NO PRESENTE";
+    data.correct_response_meaning = correctKey === data.correct_response ? "SÍ" : "NO";
   },
 };
 
