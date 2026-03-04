@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 // import { createClient } from "@supabase/supabase-js";
-// import { stories, words } from "./objects.js";
+import { stories, verificationSentences, words } from "./objects.js";
 
 
 /**************************************************************************************/
@@ -36,33 +36,25 @@ function shuffle(array) {
 
 /**************************************************************************************/
 
-// Function to randomize positive/negative sentences in experimental sentences (50% each)
-function randomizeExperimentalSentences(story) {
-  const experimentalArray = story.filter((story) => !story.base);
-  const experimentalLength = experimentalArray.length;
-  const randomPosNegArray = [];
-
-  for (let i = 0; i < experimentalLength / 2; i++) {
-    randomPosNegArray[i] = "positive";
-    randomPosNegArray[experimentalLength - 1 - i] = "negative";
-  }
-
-  shuffle(randomPosNegArray);
-
-  experimentalArray.forEach(
-    (experimentalObject, index) => {
-      experimentalObject.text = experimentalObject.options[randomPosNegArray[index]];
-      experimentalObject.type = randomPosNegArray[index];
-    }
-  );
-}
-
 shuffle(stories);
-randomizeExperimentalSentences(stories[0].sentences);
-randomizeExperimentalSentences(stories[1].sentences);
 
 const firstStory = stories[0];
 const secondStory = stories[1];
+
+
+/**************************************************************************************/
+
+shuffle(verificationSentences);
+let verificationLength = verificationSentences.length;
+
+for (let i = 0; i < verificationLength / 2; i++) {
+  verificationSentences[i].text = verificationSentences[i].trueVerification;
+  verificationSentences[i].correctResponse = correctKey;
+  verificationSentences[verificationLength - 1 - i].text = verificationSentences[verificationLength - 1 - i].falseVerfication;
+  verificationSentences[verificationLength - 1 - i].correctResponse = incorrectKey;
+}
+
+shuffle(verificationSentences);
 
 
 /**************************************************************************************/
@@ -290,10 +282,6 @@ let sentencesPresentationStimuli = firstStory.sentences.map((sentence) => {
     stimulus: `
       <h3 class="sentence">${sentence.text}</h3>
     `,
-    type: sentence.type,
-    keyword1: sentence.keyword1,
-    keyword2: sentence.keyword2,
-    classification: sentence.base ? "base" : "experimental",
   };
 });
 
@@ -304,10 +292,6 @@ let sentencesPresentation = {
   choices: [' '],
   data: {
     task: "sentences presentation",
-    type: jsPsych.timelineVariable("type"),
-    keyword1: jsPsych.timelineVariable("keyword1"),
-    keyword2: jsPsych.timelineVariable("keyword2"),
-    classification: jsPsych.timelineVariable("classification"),
   },
 };
 
@@ -432,9 +416,6 @@ let sentencesPresentationStimuli2 = secondStory.sentences.map((sentence) => {
     stimulus: `
       <h3 class="sentence">${sentence.text}</h3>
     `,
-    type: sentence.type,
-    keyword1: sentence.keyword1,
-    keyword2: sentence.keyword2,
   };
 });
 
@@ -445,9 +426,6 @@ let sentencesPresentation2 = {
   choices: [' '],
   data: {
     task: "sentences presentation",
-    type: jsPsych.timelineVariable("type"),
-    keyword1: jsPsych.timelineVariable("keyword1"),
-    keyword2: jsPsych.timelineVariable("keyword2"),
   },
 };
 
@@ -472,6 +450,7 @@ let endOfStory2 = {
   post_trial_gap: 500,
 };
 timeline.push(endOfStory2);
+
 
 /**************************************************************************************/
 
@@ -528,6 +507,70 @@ timeline.push(questionPresentationProcedure2);
 
 /**************************************************************************************/
 
+/* Instructions for verification presentation */
+let instructionsVerification = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+  <div class="instrucciones">
+    <p>Ahora realizarás la siguiente tarea:</p>
+    <p>A continuación verás una serie de <strong>palabras</strong> en la pantalla que se mostrarán una a una.</p>
+    <p>Algunas de estas palabras han podido aparecer en los textos que leíste anteriormente y otras serán nuevas.</p>
+    <p>Tu tarea consiste en indicar si cada palabra estuvo <strong>PRESENTE</strong> o <strong>NO PRESENTE</strong> en cualquiera de los dos textos.</p>
+
+    <p>Para responder harás lo siguiente:</p>
+    <p><strong>Si has visto<strong> antes el objeto, pulsa la tecla '${correctKey.toUpperCase()}' (presente).</p>
+    <p><strong>Si no has visto<strong> antes el objeto, pulsa la tecla '${incorrectKey.toUpperCase()}' (no presente).</p>
+    <p>Te recomendamos colocar los dedos sobre las teclas ${correctKey.toUpperCase()} y ${incorrectKey.toUpperCase()} durante la tarea para no olvidarlas.</p>
+    <p>Pulsa la barra espaciadora para comenzar.</p>
+  </div>
+  `,
+  choices: [' '],
+  post_trial_gap: 500,
+};
+timeline.push(instructionsVerification);
+
+/* Create stimuli array for verification presentation */
+let verificationStimuli = verificationSentences.map((verificationSentece) => {
+  return {
+    stimulus: `
+      <h3 class="sentence">${verificationSentece.text}</h3>
+      <div class="keys">
+        <p class="${correctKey === 'a' ? 'left' : 'right'}">PRESENTE</p>
+        <p class="${correctKey === 'a' ? 'right' : 'left'}">NO PRESENTE</p>
+      </div>
+    `,
+    correct_response: verificationSentece.correctResponse
+  };
+});
+
+/* verification presentation trial */
+let testVerification = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("stimulus"),
+  choices: ['a', 'l'],
+  data: {
+    task: "response verification test",
+    correct_response: jsPsych.timelineVariable("correct_response"),
+  },
+  on_finish: function (data) {
+    data.correct = jsPsych.pluginAPI.compareKeys(
+      data.response,
+      data.correct_response
+    );
+    data.correct_response_meaning = correctKey === data.correct_response ? "PRESENTE" : "NO PRESENTE";
+  },
+};
+
+/* Test procedure: fixation + verification presentation */
+let testVerificationProcedure = {
+  timeline: [fixation, testVerification],
+  timeline_variables: verificationStimuli,
+  randomize_order: true, // Randomize objects name order
+};
+timeline.push(testVerificationProcedure);
+
+
+/**************************************************************************************/
 
 /* Instructions for Tetris */
 let instructionstetris = {
@@ -636,29 +679,29 @@ timeline.push(testWordsProcedure);
 // /**************************************************************************************/
 
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_API_KEY
-);
+// const supabase = createClient(
+//   import.meta.env.VITE_SUPABASE_URL,
+//   import.meta.env.VITE_SUPABASE_API_KEY
+// );
 
-const TABLE_NAME = "StoriesNIFMainObject";
+// const TABLE_NAME = "StoriesNIFMainObject";
 
-async function saveData(data) {
-  console.log(data);
-  const { error } = await supabase.from(TABLE_NAME).insert({ data });
+// async function saveData(data) {
+//   console.log(data);
+//   const { error } = await supabase.from(TABLE_NAME).insert({ data });
 
-  return { error };
-}
+//   return { error };
+// }
 
-const saveDataBlock = {
-  type: jsPsychCallFunction,
-  func: function() {
-    saveData(jsPsych.data.get())
-  },
-  timing_post_trial: 200
-}
+// const saveDataBlock = {
+//   type: jsPsychCallFunction,
+//   func: function() {
+//     saveData(jsPsych.data.get())
+//   },
+//   timing_post_trial: 200
+// }
 
-timeline.push(saveDataBlock);
+// timeline.push(saveDataBlock);
 
 
 
