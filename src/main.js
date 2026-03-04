@@ -319,59 +319,6 @@ timeline.push(endOfStory1);
 
 /**************************************************************************************/
 
-/* Instructions for question presentation */
-let instructionsQuestions = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `
-  <div class="instrucciones">
-    <p>A continuación verás una serie de preguntas sobre el texto que acabas de leer.</p>
-    <p>Lee cada pregunta con atención y selecciona con el <strong>ratón</strong> la respuesta que consideres correcta.</p>
-    <p>No hay límite de tiempo, pero responde basándote únicamente en la información presentada en el texto.</p>
-    <br />
-    <p>Pulsa la barra espaciadora para comenzar.<p>
-  </div>
-  `,
-  choices: [' '],
-  post_trial_gap: 500,
-};
-timeline.push(instructionsQuestions);
-
-/* questions presentation trial */
-let questionPresentationTrial = firstStory.questions.map((question) => {
-  return {
-    type: jsPsychSurveyMultiChoice,
-    questions: [
-      {
-        prompt: question.question,
-        name: "response",
-        options: question.answers.map((answer) => answer.answer),
-        required: true
-      }
-    ],
-    data: {
-      task: "questions presentation",
-      question_text: question.question
-    },
-    on_finish: function(data){
-      // respuesta elegida por el participante
-      let chosen = data.response.response;
-      // buscamos esa respuesta dentro del array answers
-      let answerObj = question.answers.find(a => a.answer === chosen);
-      // guardamos si es correcta o no
-      data.correct = answerObj ? answerObj.correct : false;
-    }
-  }
-});
-
-/* Test procedure: fixation + questions presentation */
-let questionPresentationProcedure = {
-  timeline: [questionPresentationTrial],
-};
-timeline.push(questionPresentationProcedure);
-
-
-/**************************************************************************************/
-
 /* Instructions for sentence presentation */
 let instructionsSentencePresentation2 = {
   type: jsPsychHtmlKeyboardResponse,
@@ -451,61 +398,6 @@ let endOfStory2 = {
 };
 timeline.push(endOfStory2);
 
-
-/**************************************************************************************/
-
-/* Instructions for question presentation */
-let instructionsQuestions2 = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `
-  <div class="instrucciones">
-    <p>A continuación verás una serie de preguntas sobre este segundo texto que acabas de leer.</p>
-    <p>Lee cada pregunta con atención y selecciona con el <strong>ratón</strong> la respuesta que consideres correcta.</p>
-    <p>Responde basándote únicamente en la información presentada en el texto.</p>
-    <br />
-    <p>Pulsa la barra espaciadora para comenzar.<p>
-  </div>
-  `,
-  choices: [' '],
-  post_trial_gap: 500,
-};
-timeline.push(instructionsQuestions2);
-
-/* questions presentation trial */
-let questionPresentationTrial2 = secondStory.questions.map((question) => {
-  return {
-    type: jsPsychSurveyMultiChoice,
-    questions: [
-      {
-        prompt: question.question,
-        name: "response",
-        options: question.answers.map((answer) => answer.answer),
-        required: true
-      }
-    ],
-    data: {
-      task: "questions presentation",
-      question_text: question.question
-    },
-    on_finish: function(data){
-      // respuesta elegida por el participante
-      let chosen = data.response.response;
-      // buscamos esa respuesta dentro del array answers
-      let answerObj = question.answers.find(a => a.answer === chosen);
-      // guardamos si es correcta o no
-      data.correct = answerObj ? answerObj.correct : false;
-    }
-  }
-});
-
-/* Test procedure: fixation + questions presentation */
-let questionPresentationProcedure2 = {
-  timeline: [questionPresentationTrial2],
-};
-timeline.push(questionPresentationProcedure2);
-
-
-/**************************************************************************************/
 
 /* Instructions for verification presentation */
 let instructionsVerification = {
