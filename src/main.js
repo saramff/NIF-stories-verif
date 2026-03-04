@@ -3,7 +3,7 @@
 //                                                                    //  
 ////////////////////////////////////////////////////////////////////////
 
-// import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { stories, verificationSentences, words } from "./objects.js";
 
 
@@ -518,7 +518,7 @@ let instructionsVerification = {
     <p>Tu tarea consiste en indicar si cada oración es <strong>VERDADERA</strong> o <strong>FALSA</strong> según lo que aparecía en los textos.</p>
 
     <p>Por ejemplo:</p>
-    <p><em>"El gato estaba encima de la mesa."</em></p>
+    <p><em>"El gato está encima de la mesa."</em></p>
     <p>Si esa información aparecía en los textos, deberás indicar que es <strong>verdadera</strong>. Si no aparecía o contradice lo que leíste, deberás indicar que es <strong>falsa</strong>.</p>
 
     <p>Para responder harás lo siguiente:</p>
@@ -610,7 +610,7 @@ let tetris = {
   `,
   post_trial_gap: 500,
   choices: "NO_KEYS", // Prevent key press
-  trial_duration: 900000, 
+  trial_duration: 1, 
 };
 timeline.push(tetris);
 
@@ -684,29 +684,29 @@ timeline.push(testWordsProcedure);
 // /**************************************************************************************/
 
 
-// const supabase = createClient(
-//   import.meta.env.VITE_SUPABASE_URL,
-//   import.meta.env.VITE_SUPABASE_API_KEY
-// );
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_API_KEY
+);
 
-// const TABLE_NAME = "StoriesNIFMainObject";
+const TABLE_NAME = "StoriesNIFMainObjectVerification";
 
-// async function saveData(data) {
-//   console.log(data);
-//   const { error } = await supabase.from(TABLE_NAME).insert({ data });
+async function saveData(data) {
+  console.log(data);
+  const { error } = await supabase.from(TABLE_NAME).insert({ data });
 
-//   return { error };
-// }
+  return { error };
+}
 
-// const saveDataBlock = {
-//   type: jsPsychCallFunction,
-//   func: function() {
-//     saveData(jsPsych.data.get())
-//   },
-//   timing_post_trial: 200
-// }
+const saveDataBlock = {
+  type: jsPsychCallFunction,
+  func: function() {
+    saveData(jsPsych.data.get())
+  },
+  timing_post_trial: 200
+}
 
-// timeline.push(saveDataBlock);
+timeline.push(saveDataBlock);
 
 
 
