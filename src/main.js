@@ -407,11 +407,11 @@ let instructionsVerification = {
     <p>Ahora realizarás la siguiente tarea:</p>
     <p>A continuación verás una serie de <strong>oraciones</strong> en la pantalla que se mostrarán una a una.</p>
     <p>Algunas de estas oraciones serán <strong>correctas</strong> y otras serán <strong>incorrectas</strong> en relación con la información que acabas de leer en los textos.</p>
-    <p>Tu tarea consiste en indicar si cada oración es <strong>VERDADERA</strong> o <strong>FALSA</strong> según lo que aparecía en los textos.</p>
+    <p>Tu tarea consiste en indicar si cada oración es <strong>correcta</strong> o <strong>incorrecta</strong> según lo que aparecía en los textos.</p>
 
     <p>Por ejemplo:</p>
     <p><em>"El gato está encima de la mesa."</em></p>
-    <p>Si esa información aparecía en los textos, deberás indicar que es <strong>verdadera</strong>. Si no aparecía o contradice lo que leíste, deberás indicar que es <strong>falsa</strong>.</p>
+    <p>Si esa información aparecía en los textos, deberás indicar que la oración es <strong>correcta</strong>. Si no aparecía o contradice lo que leíste, deberás indicar que es <strong>incorrecta</strong>.</p>
 
     <p>Para responder harás lo siguiente:</p>
     <p><strong>Si la oración es correcta</strong>, pulsa la tecla '${correctKey.toUpperCase()}' (SÍ).</p>
@@ -502,7 +502,7 @@ let tetris = {
   `,
   post_trial_gap: 500,
   choices: "NO_KEYS", // Prevent key press
-  trial_duration: 1, 
+  trial_duration: 420000, 
 };
 timeline.push(tetris);
 
