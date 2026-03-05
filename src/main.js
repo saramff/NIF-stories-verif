@@ -407,12 +407,9 @@ let instructionsVerification = {
     <p>Ahora realizarás la siguiente tarea:</p>
     <p>A continuación verás una serie de <strong>oraciones</strong> en la pantalla que se mostrarán una a una.</p>
     <p>Algunas de estas oraciones serán <strong>correctas</strong> y otras serán <strong>incorrectas</strong> en relación con la información que acabas de leer en los textos.</p>
-    <p>Tu tarea consiste en indicar si cada oración es <strong>correcta</strong> o <strong>incorrecta</strong> según lo que aparecía en los textos.</p>
-
+    
     <p>Por ejemplo:</p>
     <p><em>"El gato está encima de la mesa."</em></p>
-    <p>Si esa información aparecía en los textos, deberás indicar que la oración es <strong>correcta</strong>. Si no aparecía o contradice lo que leíste, deberás indicar que es <strong>incorrecta</strong>.</p>
-
     <p>Para responder harás lo siguiente:</p>
     <p><strong>Si la oración es correcta</strong>, pulsa la tecla '${correctKey.toUpperCase()}' (SÍ).</p>
     <p><strong>Si la oración es incorrecta</strong>, pulsa la tecla '${incorrectKey.toUpperCase()}' (NO).</p>
@@ -474,7 +471,7 @@ let instructionstetris = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
   <div class="instrucciones">
-    <p>Ahora jugarás al Tetris durante 15 minutos.</p>
+    <p>Ahora jugarás al Tetris durante 12 minutos.</p>
     <p>En Tetris, hay piezas de diferentes formas que caen desde la parte superior de la pantalla.</p>
     <p>Tu objetivo es moverlas y girarlas para que encajen y formen líneas horizontales completas.</p>
     <p>Cuando una línea se completa, desaparece. Si las piezas se acumulan hasta llegar a la parte superior, pierdes.</p>
@@ -502,7 +499,7 @@ let tetris = {
   `,
   post_trial_gap: 500,
   choices: "NO_KEYS", // Prevent key press
-  trial_duration: 420000, 
+  trial_duration: 720000, 
 };
 timeline.push(tetris);
 
